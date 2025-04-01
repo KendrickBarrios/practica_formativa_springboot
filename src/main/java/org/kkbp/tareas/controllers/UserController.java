@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class UserController {
@@ -58,6 +56,17 @@ public class UserController {
         HashMap<String, Integer> json = new HashMap<>();
         json.put("StudentCount", studentCount);
         json.put("TeacherCount", teacherCount);
+        return json;
+    }
+
+    @GetMapping("/teachers")
+    public Map<String, String> getTeachers() {
+        Map<String, String> json = new HashMap<>();
+        String teachers = users.stream()
+                .filter(user -> user.getRole() == Role.TEACHER)
+                .map(User::toString)
+                .collect(Collectors.joining(", ", "[", "]"));
+        json.put("teachers", teachers);
         return json;
     }
 }
